@@ -94,7 +94,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
 
   <!-- HEADER -->
   <div class="mk-hdr">
-    <img class="mk-logo" id="logoImg" src="" alt="MERAKIDS">
+    <img class="mk-logo" id="logoImg" src="https://raw.githubusercontent.com/merakids/merakids-display/main/merakids_elements_secondary_logo.png" alt="MERAKIDS">
     <div class="mk-hdr-right">
       <div class="mk-weather">
         <span id="weatherIcon" style="font-size:20px;">🌤</span>
@@ -248,13 +248,13 @@ async function loadSheetData() {
 async function loadNotices() {
   const table = await loadSheetData();
   const container = document.getElementById('noticesContainer');
-  if (!table || !table.rows || table.rows.length < 2) {
+  if (!table || !table.rows || table.rows.length < 3) {
     container.innerHTML = '<div class="notice-card"><div class="n-accent orange"></div><div><span class="n-tag orange">Notice</span><div class="n-text">No notices at this time.</div></div></div>';
     return;
   }
   const colors = ['orange','sky','mint'];
   let html = '';
-  table.rows.slice(1).forEach((row, i) => {
+  table.rows.slice(2).forEach((row, i) => {
     const tag   = row.c[0]?.v || 'Notice';
     const color = row.c[1]?.v || colors[i % 3]; // B열 = type (orange/sky/mint)
     const title = row.c[2]?.v || '';
@@ -324,7 +324,7 @@ async function loadInstagram() {
     renderIgLatest(latest);
   } catch(e) {
     document.getElementById('igSlides').innerHTML =
-      `<div class="ig-loading"><div class="ig-error">📷 Error: ${e.message}<br><small style="font-size:11px;opacity:.6;">${BEHOLD_URL}</small></div></div>`;
+      `<div class="ig-loading"><div class="ig-error">📷 Instagram feed unavailable</div></div>`;
   }
 }
 
