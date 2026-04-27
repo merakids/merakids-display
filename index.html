@@ -16,6 +16,7 @@
 }
 html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-family:'Lexend Deca',sans-serif;}
 .mk{width:100vw;height:100vh;display:flex;flex-direction:column;}
+
 /* HEADER */
 .mk-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 28px 12px;border-bottom:1.5px solid var(--beige2);flex-shrink:0;}
 .mk-logo{height:44px;width:auto;}
@@ -25,13 +26,16 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
 .mk-wdesc{font-size:12px;color:var(--sand);}
 .mk-time{font-size:20px;font-weight:700;color:var(--orange);}
 .mk-date{font-size:11px;color:var(--cocoa);text-align:right;margin-top:1px;}
+
 /* SLIDES */
 .mk-slides-wrap{flex:1;overflow:hidden;position:relative;}
 .mk-slides{display:flex;width:300%;height:100%;transition:transform 0.7s cubic-bezier(0.77,0,0.18,1);}
 .mk-slide{width:33.333%;height:100%;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;}
+
 /* SECTION TITLE */
 .sec-title{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
 .sec-title::before{content:'';width:4px;height:13px;background:var(--orange);border-radius:2px;}
+
 /* SLIDE 1 — NOTICES */
 .s1-body{flex:1;padding:24px 32px;display:flex;flex-direction:column;gap:14px;overflow:hidden;}
 .notice-card{background:rgba(255,255,255,0.6);border:1.5px solid var(--beige2);border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;}
@@ -45,6 +49,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
 .n-tag.mint{background:rgba(64,186,141,.15);color:#1a7a5a;}
 .n-text{font-size:14px;color:var(--green);line-height:1.6;}
 .n-text strong{font-weight:700;}
+
 /* SLIDE 2 — MENU */
 .s2-body{flex:1;padding:24px 32px;}
 .menu-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;}
@@ -57,6 +62,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
 .snack .meal-type{color:var(--mint);}
 .meal-item{font-size:11px;color:var(--green);line-height:1.5;margin-bottom:10px;}
 .menu-day.today .meal-item{font-weight:600;}
+
 /* SLIDE 3 — INSTAGRAM */
 .s3-body{flex:1;padding:20px 28px;display:flex;flex-direction:column;overflow:hidden;}
 .ig-stage{position:relative;overflow:hidden;border-radius:16px;background:var(--beige2);flex:1;}
@@ -65,8 +71,11 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
 .ig-slide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;}
 .ig-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-size:13px;line-height:1.5;padding:28px 20px 16px;}
 .ig-dots{display:flex;gap:6px;justify-content:center;margin-top:10px;}
+.ig-dot{width:6px;height:6px;border-radius:50%;background:var(--beige2);transition:background .3s,transform .3s;}
+.ig-dot.active{background:var(--orange);transform:scale(1.4);}
 .ig-loading{color:var(--sand);font-size:14px;display:flex;align-items:center;justify-content:center;height:100%;}
 .ig-error{color:var(--sand);font-size:13px;text-align:center;padding:20px;}
+
 /* FOOTER */
 .mk-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 28px;border-top:1.5px solid var(--beige2);flex-shrink:0;}
 .mk-progress-wrap{flex:1;height:3px;background:var(--beige2);border-radius:2px;margin:0 16px;}
@@ -82,6 +91,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
 </head>
 <body>
 <div class="mk">
+
   <!-- HEADER -->
   <div class="mk-hdr">
     <img class="mk-logo" id="logoImg" src="" alt="MERAKIDS">
@@ -99,11 +109,14 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
       </div>
     </div>
   </div>
+
   <!-- SLIDES WRAPPER -->
   <div class="mk-slides-wrap">
     <button class="mk-arrow prev" onclick="prevSlide()">&#8592;</button>
     <button class="mk-arrow next" onclick="nextSlide()">&#8594;</button>
+
     <div class="mk-slides" id="mkSlides">
+
       <!-- SLIDE 1: NOTICES -->
       <div class="mk-slide">
         <div class="s1-body">
@@ -113,6 +126,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
           </div>
         </div>
       </div>
+
       <!-- SLIDE 2: WEEKLY MENU -->
       <div class="mk-slide">
         <div class="s2-body">
@@ -122,6 +136,7 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
           </div>
         </div>
       </div>
+
       <!-- SLIDE 3: INSTAGRAM -->
       <div class="mk-slide">
         <div class="s3-body">
@@ -134,8 +149,10 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
           <div class="ig-dots" id="igDots"></div>
         </div>
       </div>
-    </div>
+
+    </div><!-- /mk-slides -->
   </div>
+
   <!-- FOOTER -->
   <div class="mk-footer">
     <div class="mk-dots">
@@ -148,16 +165,19 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
     </div>
     <div class="mk-slide-num" id="slideNum">1 / 3</div>
   </div>
+
 </div>
 
 <script>
-const SHEET_ID   = '1Yl4VNWxWw2BcwZLkD1Npr-6OAxhKJtwp_-8HAraxe-M';
-const BEHOLD_URL = 'https://feeds.behold.so/6qeSvMCoWbgnnW906WHs';
-const SLIDE_DURATION = 15000;
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+const SHEET_ID   = '1Yl4VNWxWw2BcwZLkD1Npr-6OAxhKJtwp_-8HAraxe-M'; // Google Sheets ID
+const BEHOLD_URL = 'https://feeds.behold.so/6qeSvMCoWbgnnW906WHs';   // Behold JSON feed
+const SLIDE_DURATION = 15000; // ms per main slide
 
+// ─── SLIDE CONTROLLER ──────────────────────────────────────────────────────
 let currentSlide = 0;
 const totalSlides = 3;
-let autoTimer, progressTimer;
+let autoTimer, progressTimer, progressStart;
 
 function goSlide(n) {
   currentSlide = (n + totalSlides) % totalSlides;
@@ -183,6 +203,7 @@ function resetProgress() {
   autoTimer = setTimeout(() => nextSlide(), SLIDE_DURATION);
 }
 
+// ─── CLOCK ─────────────────────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
   const hh = String(now.getHours()).padStart(2,'0');
@@ -196,6 +217,7 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
+// ─── WEATHER (Open-Meteo, Calgary) ─────────────────────────────────────────
 async function loadWeather() {
   try {
     const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=51.0447&longitude=-114.0719&current_weather=true&temperature_unit=celsius');
@@ -206,11 +228,12 @@ async function loadWeather() {
     document.getElementById('weatherIcon').textContent = icons[wc] || '🌡';
     document.getElementById('tempDisplay').textContent = `${temp}°C`;
     document.getElementById('wdescDisplay').textContent = 'Calgary, AB';
-  } catch(e) {}
+  } catch(e) { /* silent fail */ }
 }
 loadWeather();
 setInterval(loadWeather, 10 * 60 * 1000);
 
+// ─── GOOGLE SHEETS DATA ────────────────────────────────────────────────────
 async function loadSheetData() {
   try {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
@@ -221,6 +244,7 @@ async function loadSheetData() {
   } catch(e) { return null; }
 }
 
+// Build notices from Sheet tab 1 (cols: Tag, Color, Title, Body)
 async function loadNotices() {
   const table = await loadSheetData();
   const container = document.getElementById('noticesContainer');
@@ -232,7 +256,7 @@ async function loadNotices() {
   let html = '';
   table.rows.slice(1).forEach((row, i) => {
     const tag   = row.c[0]?.v || 'Notice';
-    const color = row.c[1]?.v || colors[i % 3];
+    const color = row.c[1]?.v || colors[i % 3]; // B열 = type (orange/sky/mint)
     const title = row.c[2]?.v || '';
     const body  = row.c[3]?.v || '';
     html += `<div class="notice-card">
@@ -246,6 +270,7 @@ async function loadNotices() {
   container.innerHTML = html;
 }
 
+// Build weekly menu from Sheet (cols: Day, Lunch, Snack AM, Snack PM)
 async function loadMenu() {
   try {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=menu`;
@@ -254,13 +279,13 @@ async function loadMenu() {
     const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
     const table = json.table;
     const grid = document.getElementById('menuGrid');
-    const todayIdx = new Date().getDay();
+    const todayIdx = new Date().getDay(); // 0=Sun
     const dayMap = {1:'MON',2:'TUE',3:'WED',4:'THU',5:'FRI'};
+    let html = '';
     if (!table || !table.rows || table.rows.length < 2) {
       grid.innerHTML = '<div style="grid-column:span 5;color:var(--sand);font-size:13px;text-align:center;padding:20px;">Menu not available</div>';
       return;
     }
-    let html = '';
     table.rows.slice(1,6).forEach((row, i) => {
       const dayNum = i + 1;
       const isToday = dayNum === todayIdx;
@@ -281,6 +306,7 @@ async function loadMenu() {
   }
 }
 
+// ─── INSTAGRAM (최신 포스트 1개만 표시) ────────────────────────────────────
 async function loadInstagram() {
   try {
     const r = await fetch(BEHOLD_URL);
@@ -288,11 +314,13 @@ async function loadInstagram() {
     const data = await r.json();
     const posts = data.posts || data;
     if (!Array.isArray(posts) || posts.length === 0) throw new Error('no posts');
+
+    // 이미지/캐러셀/영상 중 가장 최신 1개
     const latest = posts.find(p =>
-      p.mediaType === 'IMAGE' || p.mediaType === 'CAROUSEL_ALBUM' ||
-      (p.mediaType === 'VIDEO' && p.thumbnailUrl)
+      p.mediaType === 'IMAGE' || p.mediaType === 'CAROUSEL_ALBUM'
     );
     if (!latest) throw new Error('no image post');
+
     renderIgLatest(latest);
   } catch(e) {
     document.getElementById('igSlides').innerHTML =
@@ -302,10 +330,13 @@ async function loadInstagram() {
 
 function renderIgLatest(post) {
   const slidesEl = document.getElementById('igSlides');
-  document.getElementById('igDots').innerHTML = '';
+  const dotsEl   = document.getElementById('igDots');
+  dotsEl.innerHTML = ''; // 최신 1개라 dots 불필요
+
   const imgUrl  = post.sizes?.large?.mediaUrl || post.sizes?.medium?.mediaUrl || post.thumbnailUrl || post.mediaUrl || '';
   const caption = (post.caption || '').slice(0, 140) + ((post.caption||'').length > 140 ? '…' : '');
   const dateStr = post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-CA', {month:'short', day:'numeric'}) : '';
+
   slidesEl.innerHTML = `
     <div class="ig-slide">
       <img src="${imgUrl}" alt="" onerror="this.style.display='none'">
@@ -317,10 +348,13 @@ function renderIgLatest(post) {
   `;
 }
 
-function startIgAuto() {}
+function startIgAuto() {} // 최신 1개라 자동 슬라이드 불필요
 function stopIgAuto()  {}
+
+// 30분마다 새 포스트 체크
 setInterval(loadInstagram, 30 * 60 * 1000);
 
+// ─── INIT ───────────────────────────────────────────────────────────────────
 loadNotices();
 loadMenu();
 loadInstagram();
