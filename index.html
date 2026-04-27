@@ -317,7 +317,7 @@ async function loadInstagram() {
 
     // 이미지/캐러셀/영상 중 가장 최신 1개
     const latest = posts.find(p =>
-      p.mediaType === 'IMAGE' || p.mediaType === 'CAROUSEL_ALBUM'
+      p.mediaType === 'IMAGE' || p.mediaType === 'CAROUSEL_ALBUM' || p.mediaType === 'VIDEO'
     );
     if (!latest) throw new Error('no image post');
 
@@ -330,16 +330,20 @@ async function loadInstagram() {
 
 function renderIgLatest(post) {
   const slidesEl = document.getElementById('igSlides');
-  const dotsEl   = document.getElementById('igDots');
-  dotsEl.innerHTML = ''; // 최신 1개라 dots 불필요
+  document.getElementById('igDots').innerHTML = '';
+  const isVideo  = post.mediaType === 'VIDEO';
+  const videoUrl = post.mediaUrl || '';
+  const imgUrl   = post.sizes?.large?.mediaUrl || post.sizes?.medium?.mediaUrl || post.thumbnailUrl || post.mediaUrl || '';
+  const caption  = (post.caption || '').slice(0, 140) + ((post.caption||'').length > 140 ? '…' : '');
+  const dateStr  = post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-CA', {month:'short', day:'numeric'}) : '';
 
-  const imgUrl  = post.sizes?.large?.mediaUrl || post.sizes?.medium?.mediaUrl || post.thumbnailUrl || post.mediaUrl || '';
-  const caption = (post.caption || '').slice(0, 140) + ((post.caption||'').length > 140 ? '…' : '');
-  const dateStr = post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-CA', {month:'short', day:'numeric'}) : '';
+  const mediaHtml = isVideo
+    ? `<video src="${videoUrl}" autoplay muted loop playsinline style="max-width:100%;max-height:100%;width:auto;height:auto;display:block;"></video>`
+    : `<img src="${imgUrl}" alt="" onerror="this.style.display='none'" style="max-width:100%;max-height:100%;width:auto;height:auto;display:block;">`;
 
   slidesEl.innerHTML = `
     <div class="ig-slide">
-      <img src="${imgUrl}" alt="" onerror="this.style.display='none'">
+      ${mediaHtml}
       ${caption ? `<div class="ig-caption">
         ${dateStr ? `<div style="font-size:10px;opacity:.7;margin-bottom:4px;">${dateStr}</div>` : ''}
         ${caption}
