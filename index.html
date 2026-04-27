@@ -67,4 +67,290 @@ html,body{width:100vw;height:100vh;overflow:hidden;background:var(--beige);font-
 .s3-body{flex:1;padding:20px 28px;display:flex;flex-direction:column;overflow:hidden;}
 .ig-stage{position:relative;overflow:hidden;border-radius:16px;background:var(--beige2);height:0;flex:1;max-height:500px;}
 .ig-slides{display:flex;width:100%;height:100%;transition:transform 0.6s cubic-bezier(0.77,0,0.18,1);}
-.ig-slide{flex-shrink:0;width:100%;height:10
+.ig-slide{flex-shrink:0;width:100%;height:100%;position:relative;display:flex;align-items:center;justify-content:center;background:var(--beige2);}
+.ig-slide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block;}
+.ig-caption{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-size:13px;line-height:1.5;padding:28px 20px 16px;}
+.ig-dots{display:flex;gap:6px;justify-content:center;margin-top:10px;}
+.ig-dot{width:6px;height:6px;border-radius:50%;background:var(--beige2);transition:background .3s,transform .3s;}
+.ig-dot.active{background:var(--orange);transform:scale(1.4);}
+.ig-loading{color:var(--sand);font-size:14px;display:flex;align-items:center;justify-content:center;height:100%;}
+.ig-error{color:var(--sand);font-size:13px;text-align:center;padding:20px;}
+
+/* FOOTER */
+.mk-footer{display:flex;align-items:center;justify-content:space-between;padding:8px 28px;border-top:1.5px solid var(--beige2);flex-shrink:0;}
+.mk-progress-wrap{flex:1;height:3px;background:var(--beige2);border-radius:2px;margin:0 16px;}
+.mk-progress-bar{height:100%;background:var(--orange);border-radius:2px;width:0%;transition:width 0.08s linear;}
+.mk-dots{display:flex;gap:7px;}
+.mk-dot{width:8px;height:8px;border-radius:50%;background:var(--beige2);cursor:pointer;border:none;transition:background .3s,transform .3s;}
+.mk-dot.active{background:var(--orange);transform:scale(1.3);}
+.mk-slide-num{font-size:11px;font-weight:500;color:var(--sand);white-space:nowrap;}
+.mk-arrow{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;background:rgba(255,255,255,0.75);border:1.5px solid var(--beige2);border-radius:50%;color:var(--green);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;}
+.mk-arrow.prev{left:12px;}
+.mk-arrow.next{right:12px;}
+</style>
+</head>
+<body>
+<div class="mk">
+
+  <!-- HEADER -->
+  <div class="mk-hdr">
+    <img class="mk-logo" id="logoImg" src="" alt="MERAKIDS">
+    <div class="mk-hdr-right">
+      <div class="mk-weather">
+        <span id="weatherIcon" style="font-size:20px;">🌤</span>
+        <div>
+          <div class="mk-temp" id="tempDisplay">–°C</div>
+          <div class="mk-wdesc" id="wdescDisplay">Calgary</div>
+        </div>
+      </div>
+      <div>
+        <div class="mk-time" id="clockDisplay">00:00</div>
+        <div class="mk-date" id="dateDisplay">–</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDES WRAPPER -->
+  <div class="mk-slides-wrap">
+    <button class="mk-arrow prev" onclick="prevSlide()">&#8592;</button>
+    <button class="mk-arrow next" onclick="nextSlide()">&#8594;</button>
+
+    <div class="mk-slides" id="mkSlides">
+
+      <!-- SLIDE 1: NOTICES -->
+      <div class="mk-slide">
+        <div class="s1-body">
+          <div class="sec-title">Notices</div>
+          <div id="noticesContainer">
+            <div class="ig-loading">Loading notices…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: WEEKLY MENU -->
+      <div class="mk-slide">
+        <div class="s2-body">
+          <div class="sec-title">Weekly Menu</div>
+          <div class="menu-grid" id="menuGrid">
+            <div class="ig-loading" style="grid-column:span 5;">Loading menu…</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: INSTAGRAM -->
+      <div class="mk-slide">
+        <div class="s3-body">
+          <div class="sec-title">@merakids_yyc</div>
+          <div class="ig-stage" id="igStage">
+            <div class="ig-slides" id="igSlides">
+              <div class="ig-loading">Loading Instagram…</div>
+            </div>
+          </div>
+          <div class="ig-dots" id="igDots"></div>
+        </div>
+      </div>
+
+    </div><!-- /mk-slides -->
+  </div>
+
+  <!-- FOOTER -->
+  <div class="mk-footer">
+    <div class="mk-dots">
+      <button class="mk-dot active" onclick="goSlide(0)"></button>
+      <button class="mk-dot" onclick="goSlide(1)"></button>
+      <button class="mk-dot" onclick="goSlide(2)"></button>
+    </div>
+    <div class="mk-progress-wrap">
+      <div class="mk-progress-bar" id="progressBar"></div>
+    </div>
+    <div class="mk-slide-num" id="slideNum">1 / 3</div>
+  </div>
+
+</div>
+
+<script>
+// ─── CONFIG ────────────────────────────────────────────────────────────────
+const SHEET_ID   = '1gITMrFOUAq1kKxn2AaYHBFnG64kK6ND7NeIH_1nAFZU';
+const BEHOLD_URL = 'https://feeds.behold.so/XtewjdrfPqZ7g0gHRvg0';
+const SLIDE_DURATION = 15000;
+
+// ─── SLIDE CONTROLLER ──────────────────────────────────────────────────────
+let currentSlide = 0;
+const totalSlides = 3;
+let autoTimer, progressTimer;
+
+function goSlide(n) {
+  currentSlide = (n + totalSlides) % totalSlides;
+  document.getElementById('mkSlides').style.transform = `translateX(-${currentSlide * 33.333}%)`;
+  document.querySelectorAll('.mk-dot').forEach((d,i) => d.classList.toggle('active', i === currentSlide));
+  document.getElementById('slideNum').textContent = `${currentSlide+1} / ${totalSlides}`;
+  resetProgress();
+  if (currentSlide === 2) startIgAuto(); else stopIgAuto();
+}
+function nextSlide(){ goSlide(currentSlide+1); }
+function prevSlide(){ goSlide(currentSlide-1); }
+
+function resetProgress() {
+  clearInterval(progressTimer);
+  clearTimeout(autoTimer);
+  const bar = document.getElementById('progressBar');
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  setTimeout(() => {
+    bar.style.transition = `width ${SLIDE_DURATION}ms linear`;
+    bar.style.width = '100%';
+  }, 50);
+  autoTimer = setTimeout(() => nextSlide(), SLIDE_DURATION);
+}
+
+// ─── CLOCK ─────────────────────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clockDisplay').textContent = `${hh}:${mm}`;
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('dateDisplay').textContent =
+    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── WEATHER ───────────────────────────────────────────────────────────────
+async function loadWeather() {
+  try {
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=51.0447&longitude=-114.0719&current_weather=true&temperature_unit=celsius');
+    const d = await r.json();
+    const wc = d.current_weather.weathercode;
+    const temp = Math.round(d.current_weather.temperature);
+    const icons = {0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',80:'🌦',81:'🌧',95:'⛈',99:'⛈'};
+    document.getElementById('weatherIcon').textContent = icons[wc] || '🌡';
+    document.getElementById('tempDisplay').textContent = `${temp}°C`;
+    document.getElementById('wdescDisplay').textContent = 'Calgary, AB';
+  } catch(e) {}
+}
+loadWeather();
+setInterval(loadWeather, 10 * 60 * 1000);
+
+// ─── GOOGLE SHEETS ─────────────────────────────────────────────────────────
+async function loadSheetData() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+    const r = await fetch(url);
+    const text = await r.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+    return json.table;
+  } catch(e) { return null; }
+}
+
+async function loadNotices() {
+  const table = await loadSheetData();
+  const container = document.getElementById('noticesContainer');
+  if (!table || !table.rows || table.rows.length < 2) {
+    container.innerHTML = '<div class="notice-card"><div class="n-accent orange"></div><div><span class="n-tag orange">Notice</span><div class="n-text">No notices at this time.</div></div></div>';
+    return;
+  }
+  const colors = ['orange','sky','mint'];
+  let html = '';
+  table.rows.slice(1).forEach((row, i) => {
+    const tag   = row.c[0]?.v || 'Notice';
+    const color = colors[i % 3];
+    const title = row.c[1]?.v || '';
+    const body  = row.c[2]?.v || '';
+    html += `<div class="notice-card">
+      <div class="n-accent ${color}"></div>
+      <div>
+        <span class="n-tag ${color}">${tag}</span>
+        <div class="n-text">${title ? `<strong>${title}</strong><br>` : ''}${body}</div>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+async function loadMenu() {
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Menu`;
+    const r = await fetch(url);
+    const text = await r.text();
+    const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+    const table = json.table;
+    const grid = document.getElementById('menuGrid');
+    const todayIdx = new Date().getDay();
+    const dayMap = {1:'MON',2:'TUE',3:'WED',4:'THU',5:'FRI'};
+    let html = '';
+    if (!table || !table.rows || table.rows.length < 2) {
+      grid.innerHTML = '<div style="grid-column:span 5;color:var(--sand);font-size:13px;text-align:center;padding:20px;">Menu not available</div>';
+      return;
+    }
+    table.rows.slice(1,6).forEach((row, i) => {
+      const dayNum = i + 1;
+      const isToday = dayNum === todayIdx;
+      const day    = row.c[0]?.v || dayMap[dayNum] || `Day${dayNum}`;
+      const lunch  = row.c[1]?.v || '–';
+      const snackA = row.c[2]?.v || '–';
+      const snackP = row.c[3]?.v || '–';
+      html += `<div class="menu-day${isToday?' today':''}">
+        <div class="menu-dlabel">${day}</div>
+        <div class="lunch"><div class="meal-type">Lunch</div><div class="meal-item">${lunch}</div></div>
+        <div class="snack"><div class="meal-type">Snack AM</div><div class="meal-item">${snackA}</div></div>
+        <div class="snack"><div class="meal-type">Snack PM</div><div class="meal-item">${snackP}</div></div>
+      </div>`;
+    });
+    grid.innerHTML = html;
+  } catch(e) {
+    document.getElementById('menuGrid').innerHTML = '<div style="grid-column:span 5;color:var(--sand);font-size:13px;text-align:center;padding:20px;">Menu not available</div>';
+  }
+}
+
+// ─── INSTAGRAM (최신 포스트 1개) ───────────────────────────────────────────
+async function loadInstagram() {
+  try {
+    const r = await fetch(BEHOLD_URL);
+    if (!r.ok) throw new Error('feed error');
+    const data = await r.json();
+    const posts = data.posts || data;
+    if (!Array.isArray(posts) || posts.length === 0) throw new Error('no posts');
+    const latest = posts.find(p =>
+      p.mediaType === 'IMAGE' || p.mediaType === 'CAROUSEL_ALBUM' ||
+      (p.mediaType === 'VIDEO' && p.thumbnailUrl)
+    );
+    if (!latest) throw new Error('no image post');
+    renderIgLatest(latest);
+  } catch(e) {
+    document.getElementById('igSlides').innerHTML =
+      `<div class="ig-loading"><div class="ig-error">📷 Instagram feed unavailable<br><small style="font-size:11px;opacity:.6;">Check Behold connection</small></div></div>`;
+  }
+}
+
+function renderIgLatest(post) {
+  const slidesEl = document.getElementById('igSlides');
+  document.getElementById('igDots').innerHTML = '';
+  const imgUrl  = post.sizes?.large?.url || post.sizes?.medium?.url || post.mediaUrl || post.thumbnailUrl || '';
+  const caption = (post.caption || '').slice(0, 140) + ((post.caption||'').length > 140 ? '…' : '');
+  const dateStr = post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-CA', {month:'short', day:'numeric'}) : '';
+  slidesEl.innerHTML = `
+    <div class="ig-slide">
+      <img src="${imgUrl}" alt="" onerror="this.style.display='none'">
+      ${caption ? `<div class="ig-caption">
+        ${dateStr ? `<div style="font-size:10px;opacity:.7;margin-bottom:4px;">${dateStr}</div>` : ''}
+        ${caption}
+      </div>` : ''}
+    </div>
+  `;
+}
+
+function startIgAuto() {}
+function stopIgAuto()  {}
+
+setInterval(loadInstagram, 30 * 60 * 1000);
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+loadNotices();
+loadMenu();
+loadInstagram();
+goSlide(0);
+</script>
+</body>
+</html>
