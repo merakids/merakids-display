@@ -303,7 +303,7 @@ async function loadInstagram() {
 function renderIgLatest(post) {
   const slidesEl = document.getElementById('igSlides');
   document.getElementById('igDots').innerHTML = '';
-  const imgUrl  = post.sizes?.large?.url || post.sizes?.medium?.url || post.mediaUrl || post.thumbnailUrl || '';
+  const imgUrl  = post.sizes?.large?.mediaUrl || post.sizes?.medium?.mediaUrl || post.thumbnailUrl || post.mediaUrl || '';
   const caption = (post.caption || '').slice(0, 140) + ((post.caption||'').length > 140 ? '…' : '');
   const dateStr = post.timestamp ? new Date(post.timestamp).toLocaleDateString('en-CA', {month:'short', day:'numeric'}) : '';
   slidesEl.innerHTML = `
