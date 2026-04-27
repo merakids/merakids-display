@@ -324,7 +324,7 @@ async function loadInstagram() {
     renderIgLatest(latest);
   } catch(e) {
     document.getElementById('igSlides').innerHTML =
-      `<div class="ig-loading"><div class="ig-error">📷 Instagram feed unavailable<br><small style="font-size:11px;opacity:.6;">Check Behold connection</small></div></div>`;
+      `<div class="ig-loading"><div class="ig-error">📷 Error: ${e.message}<br><small style="font-size:11px;opacity:.6;">${BEHOLD_URL}</small></div></div>`;
   }
 }
 
